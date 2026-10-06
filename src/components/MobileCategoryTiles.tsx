@@ -1,13 +1,20 @@
 import { Link } from "react-router-dom";
 import { categories } from "../data/products";
 import { localizedPath } from "../lib/routes";
-import type { Locale } from "../types";
+import type { CategoryId, Locale } from "../types";
+
+const categoryPhotos: Record<CategoryId, string> = {
+  lighting: "/assets/categories/photos/lighting.webp",
+  televisions: "/assets/categories/photos/televisions.webp",
+  plumbing: "/assets/categories/photos/plumbing.webp",
+  medical: "/assets/categories/photos/medical.webp",
+};
 
 const popularSubcategories = [
-  ["lighting", "Лампы", "bulbs"],
-  ["lighting", "LED-ленты", "led-strips"],
-  ["plumbing", "Смесители", "mixers"],
-  ["medical", "Тонометры", "tonometers"],
+  ["lighting", "Лампы", "/assets/categories/photos/bulbs.webp"],
+  ["lighting", "LED-ленты", "/assets/categories/photos/led-strips.webp"],
+  ["plumbing", "Смесители", "/assets/categories/photos/mixers.webp"],
+  ["medical", "Тонометры", "/assets/categories/photos/tonometers.webp"],
 ] as const;
 
 export function MobileCategoryTiles({ locale }: { locale: Locale }) {
@@ -15,7 +22,7 @@ export function MobileCategoryTiles({ locale }: { locale: Locale }) {
     ...categories.map((category) => ({
       key: category.id,
       label: category.label[locale],
-      image: category.slug,
+      image: categoryPhotos[category.id],
       href: localizedPath(locale, `/catalog/${category.slug}`),
     })),
     ...popularSubcategories.flatMap(([categoryId, subcategoryRu, image]) => {
@@ -36,19 +43,19 @@ export function MobileCategoryTiles({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <div className="grid auto-cols-[76px] grid-flow-col grid-rows-[112px_112px] gap-x-2 gap-y-2 overflow-x-auto overscroll-x-contain pb-2 snap-x snap-mandatory">
+    <div className="grid auto-cols-[min(76px,calc((100vw-48px)/4))] grid-flow-col grid-rows-[112px_112px] gap-x-2 gap-y-2 overflow-x-auto overscroll-x-contain pb-2 snap-x snap-mandatory">
       {tiles.map((tile) => (
         <Link
           key={tile.key}
           to={tile.href}
-          className="grid h-28 w-[76px] snap-start grid-rows-[76px_32px] gap-1 text-center"
+          className="grid h-28 w-[min(76px,calc((100vw-48px)/4))] snap-start grid-rows-[76px_32px] gap-1 text-center"
         >
-          <span className="flex h-[76px] w-[76px] items-center justify-center rounded-2xl bg-[var(--surface)] p-1">
+          <span className="mx-auto flex h-[76px] w-full items-center justify-center">
             <img
-              src={`/assets/categories/${tile.image}.svg`}
+              src={tile.image}
               alt=""
-              width="64"
-              height="64"
+              width="76"
+              height="76"
               className="h-full w-full object-contain"
             />
           </span>
